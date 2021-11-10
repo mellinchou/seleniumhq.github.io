@@ -1,119 +1,14 @@
 ---
-title: "Driver spezifische Capabilities"
-linkTitle: "Driver spezifische Capabilities"
-weight: 2
-aliases: ["/documentation/de/driver_idiosyncrasies/driver_specific_capabilities/"]
+title: "Recursos Específicos do IE"
+linkTitle: "Específicos do IE"
+weight: 4
 ---
 
-## Firefox
+## fileUploadDialogTimeout
 
-### Definerte Capabilities in den `FirefoxOptions`
-
-`FirefoxOptions` ist die neue Methode um Capabilities für den Firefoxbrowser 
-zu definieren und sollte bevorzugt verwendet werden statt den DesiredCapabilities
-and should generally be used in preference to DesiredCapabilities.
-
-{{< tabpane langEqualsHeader=true >}}
-  {{< tab header="Java" >}}
-FirefoxOptions options = new FirefoxOptions();
-options.addPreference("network.proxy.type", 0);
-driver = new RemoteWebDriver(options);
-  {{< /tab >}}
-  {{< tab header="Python" >}}
-from selenium.webdriver.firefox.options import Options
-options = Options()
-options.headless = True
-driver = webdriver.Firefox(options=options)
-  {{< /tab >}}
-  {{< tab header="CSharp" >}}
-var options = new FirefoxOptions();
-options.Proxy.Kind = ProxyKind.Direct;
-var driver = new FirefoxDriver(options);
-  {{< /tab >}}
-  {{< tab header="Ruby" >}}
-require 'selenium-webdriver'
-opts = Selenium::WebDriver::Firefox::Options.new(args: ['-headless'])
-driver = Selenium::WebDriver.for(:firefox, options: opts)
-  {{< /tab >}}
-  {{< tab header="JavaScript" >}}
-const { Builder } = require("selenium-webdriver");
-const firefox = require('selenium-webdriver/firefox');
-
-const options = new firefox.Options();
-options.headless();
-const driver = new Builder()
-    .forBrowser('firefox')
-    .setFirefoxOptions(options)
-    .build();
-  {{< /tab >}}
-  {{< tab header="Kotlin" >}}
-val options = new FirefoxOptions()
-options.addPreference("network.proxy.type", 0)
-driver = RemoteWebDriver(options)
-  {{< /tab >}}
-{{< /tabpane >}}
-
-
-### Erstellen eines benutzerdefinierten Profils
-
-Wie hier demonstriert ist es möglich ein benutzerdefiniertes 
-Profil für Firefox zu erstellen.
-
-{{< tabpane langEqualsHeader=true >}}
-  {{< tab header="Java" >}}
-FirefoxProfile profile = new FirefoxProfile();
-FirefoxOptions options = new FirefoxOptions();
-options.setProfile(profile);
-driver = new RemoteWebDriver(options);
-  {{< /tab >}}
-  {{< tab header="Python" >}}
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
-options=Options()
-firefox_profile = FirefoxProfile()
-firefox_profile.set_preference("javascript.enabled", False)
-options.profile = firefox_profile
-  {{< /tab >}}
-  {{< tab header="CSharp" >}}
-var options = new FirefoxOptions();
-var profile = new FirefoxProfile();
-options.Profile = profile;
-var driver = new RemoteWebDriver(options);
-  {{< /tab >}}
-  {{< tab header="Ruby" >}}
-profile = Selenium::WebDriver::Firefox::Profile.new
-profile['browser.download.dir'] = "/tmp/webdriver-downloads"
-options = Selenium::WebDriver::Firefox::Options.new(profile: profile)
-driver = Selenium::WebDriver.for :firefox, options: options
-  {{< /tab >}}
-  {{< tab header="JavaScript" >}}
-const { Builder } = require("selenium-webdriver");
-const firefox = require('selenium-webdriver/firefox');
-
-const options = new firefox.Options();
-let profile = '/path to custom profile';
-options.setProfile(profile);
-const driver = new Builder()
-    .forBrowser('firefox')
-    .setFirefoxOptions(options)
-    .build();
-  {{< /tab >}}
-  {{< tab header="Kotlin" >}}
-val options = FirefoxOptions()
-options.profile = FirefoxProfile()
-driver = RemoteWebDriver(options)
-  {{< /tab >}}
-{{< /tabpane >}}
-
-## Internet Explorer
-
-### Timeout betreffend Dateiupload
-
-Unter Umständen kann es vorkommen das der Internet Explorer in ein
-Timout läuft während der Dateiupload-Dialog geöffnet wird. Der IEDriver
-hat ein standardmässiges Timeout von 1000ms, jedoch dieses kann 
-erhöht werden indem die capability mit dem Namen fileUploadDialogTimeout
-definiert wird.
+Em alguns ambientes, o Internet Explorer pode expirar ao abrir a
+Caixa de Diálogo de upload de arquivo. O IEDriver tem um tempo limite padrão de 1000 ms, mas você
+pode aumentar o tempo limite usando o recurso fileUploadDialogTimeout.
 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -128,7 +23,7 @@ options = webdriver.IeOptions()
 options.file_upload_dialog_timeout = 2000
 driver = webdriver.Ie(options=options)
 
-# Navigate to url
+# Navegar para Url
 driver.get("http://www.google.com")
 
 driver.quit()
@@ -148,7 +43,7 @@ const ie = require('selenium-webdriver/ie');
 let options = new ie.Options().fileUploadDialogTimeout(2000);
 let driver = await Builder()
           .setIeOptions(options)
-          .build();
+          .build(); 
   {{< /tab >}}
   {{< tab header="Kotlin" >}}
 val options = InternetExplorerOptions()
@@ -157,18 +52,18 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### ensureCleanSession
+## ensureCleanSession
 
-Ist die Capability auf `true` gesetzt, wird der _Cache, 
-Browser History and Cookies_ für alle laufenden Instanzen des
-InternetExplorer inklusive aller die manuell oder vom WebDriver 
-gestartet werden. Standardmäßig ist der Wert mit _false_ vorbelegt.
+Quando definido como `true`, este recurso limpa o _Cache,
+Histórico do navegador e cookies_ para todas as instâncias em execução
+do InternetExplorer, incluindo aquelas iniciadas manualmente
+ou pelo driver. Por padrão, é definido como `false`.
 
-Die Verwendung dieser Capability führt zu Performanceeinbußen
-während des starten des Browsers, da der driver wartet bis
-der Cache geleert wird bevor der InternetExplorer gestartet wird.
+Usar este recurso causará queda de desempenho quando
+iniciar o navegador, pois o driver irá esperar até que o cache
+seja limpo antes de iniciar o navegador IE.
 
-Es wird ein Wert vom Typ Boolean erwartet.
+Esse recurso aceita um valor booleano como parâmetro.
 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -183,7 +78,7 @@ options = webdriver.IeOptions()
 options.ensure_clean_session = True
 driver = webdriver.Ie(options=options)
 
-# Navigate to url
+# Navegar para Url
 driver.get("http://www.google.com")
 
 driver.quit()
@@ -212,15 +107,14 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### ignoreZoomSetting
+## ignoreZoomSetting
 
-Der InternetExplorer erwartet das das Browser Zoomlevel auf 100% 
-eingestellt ist, andernfalls wird eine Fehlermeldung (=Exception)
-ausgelöst. Dieses Standardverhalten kann deaktiviert werden in dem
-die Einstellung _ignoreZoomSetting_ auf _true_ gesetzt wird.
+O driver do InternetExplorer espera que o nível de zoom do navegador seja de 100%,
+caso contrário, o driver lançará uma exceção. Este comportamento padrão
+pode ser desativado definindo _ignoreZoomSetting_ como _true_.
 
-Die Capability erwartet einen Booleanwert als Parameter.
-
+Esse recurso aceita um valor booleano como parâmetro.
+ 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
 InternetExplorerOptions options = new InternetExplorerOptions();
@@ -234,7 +128,7 @@ options = webdriver.IeOptions()
 options.ignore_zoom_level = True
 driver = webdriver.Ie(options=options)
 
-# Navigate to url
+# Navegar para Url
 driver.get("http://www.google.com")
 
 driver.quit()
@@ -263,23 +157,23 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### ignoreProtectedModeSettings
+## ignoreProtectedModeSettings
 
-Legt fest ob die Prüfung des _Protected Mode_ beim Starten
-einer neuen IE Sitzung übersprungen werden soll.
+Se deve ignorar a verificação do _Modo protegido_ durante o lançamento
+uma nova sessão do IE.
 
-Der driver löst eine Exception aus falls der _Proteced Mode_
-nicht definiert wurde oder nicht für alle Umgebungen gleich ist.
+Se não for definido e as configurações do _Modo protegido_ não forem iguais para
+todas as zonas, uma exceção será lançada pelo driver.
 
-Wenn diese capability auf `true` gesetzt wird, können Tests
-instabil werden, bzw. kann der Browser abstürzen oder nicht
-reagieren. Diese Einstellung ist nicht zu bevorzugen und sollte
-nur als zweite Wahl genutzt werden. Mit Sicherheit sollte
-der Protected Mode für jede Zone *immer* manuell definiert werden.
-Falls jemand diese Einstellung nutzt kann kein umfassender Support
-garantiert werden.
+Se a capacidade for definida como `true`, os testes podem
+tornar-se instáveis, não responderem ou os navegadores podem travar.
+No entanto, esta ainda é de longe a segunda melhor escolha,
+e a primeira escolha *sempre* deve ser
+definir as configurações do Modo protegido de cada zona manualmente.
+Se um usuário estiver usando esta propriedade,
+apenas um "melhor esforço" no suporte será dado.
 
-Die capability erwartet einen Booleanwert als Parameter.
+Esse recurso aceita um valor booleano como parâmetro.
  
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -294,7 +188,7 @@ options = webdriver.IeOptions()
 options.ignore_protected_mode_settings = True
 driver = webdriver.Ie(options=options)
 
-# Navigate to url
+# Navegar para Url
 driver.get("http://www.google.com")
 
 driver.quit()
@@ -323,12 +217,12 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### silent
+## silent
 
-Ist diese capability auf `true` gesetzt, werden alle 
-Diagnosemeldungen des IEDriverServer unterdrückt.
+Quando definido como `true`, esse recurso suprime a
+saída de diagnóstico do IEDriverServer.
 
-Als Parameter wird ein Booleanwert erwartet.
+Esse recurso aceita um valor booleano como parâmetro.
  
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -343,7 +237,7 @@ options = webdriver.IeOptions()
 options.set_capability("silent", True)
 driver = webdriver.Ie(options=options)
 
-# Navigate to url
+# Navegar para Url
 driver.get("http://www.google.com")
 
 driver.quit()
@@ -351,10 +245,10 @@ driver.quit()
   {{< tab header="CSharp" >}}
 InternetExplorerOptions options = new InternetExplorerOptions();
 options.AddAdditionalInternetExplorerOption("silent", true);
-IWebDriver driver = new InternetExplorerDriver(options); 
+IWebDriver driver = new InternetExplorerDriver(options);
   {{< /tab >}}
   {{< tab header="Ruby" >}}
-# Please raise a PR to add code sample
+# Por favor inclua um PR para adicionar uma amostra de código
   {{< /tab >}}
   {{< tab header="JavaScript" >}}
 const {Builder,By, Capabilities} = require('selenium-webdriver');
@@ -394,23 +288,22 @@ fun main() {
   {{< /tab >}}
 {{< /tabpane >}}
 
+## Opções de linha de comando do IE
 
-### IE Command-Line Options
+O Internet Explorer inclui várias opções de linha de comando
+que permitem solucionar problemas e configurar o navegador.
 
-Der Internet Explorer akzeptiert eine Reihe von Kommandozeilenparameter
-die die Fehlersuche erleichtern und um den Browser zu konfigurieren.
+Os seguintes pontos descrevem algumas opções de linha de comando com suporte
 
-Folgend sind einige der Kommandozeilenparameter angeführt
+* _-private_: Usado para iniciar o IE no modo de navegação privada. Isso funciona para o IE 8 e versões posteriores.
 
-* _-private_ : Wird genutzt um den IE im Inkognitomodus zu starten. Diese Option wird ab IE Version 8 unterstützt.
+* _-k_: Inicia o Internet Explorer no modo quiosque.
+O navegador é aberto em uma janela maximizada que não exibe a barra de endereço, os botões de navegação ou a barra de status.
 
-* _-k_ : Startet den Internet Explorer im Kiosk Modus.  
-Der Browser öffnet sich mit maximerten Fenster, indem die Navigationsleiste, das Adressfeld und die Statusbar verborgen sind. 
+* _-extoff_: Inicia o IE no modo sem add-on.
+Esta opção é usada especificamente para solucionar problemas com complementos do navegador. Funciona no IE 7 e versões posteriores.
 
-* _-extoff_ : Startet den IE ohne Addons.
-Diese Option wird verwendet um Problemen mit Browser Addons vorzubeugen. Dies wird ab Version 7 unterstützt.  
-
-Bemerkung: __forceCreateProcessApi__ sollte aktiviert werden damit die Kommandozeilenparameter unterstützt werden.
+Nota: __forceCreateProcessApi__ deve ser habilitado para que os argumentos da linha de comando funcionem.
 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -442,7 +335,7 @@ options.add_argument('-private')
 options.force_create_process_api = True
 driver = webdriver.Ie(options=options)
 
-# Navigate to url
+# Navegar para Url
 driver.get("http://www.google.com")
 
 driver.quit()
@@ -472,7 +365,7 @@ options.add_argument('-k')
 driver = Selenium::WebDriver.for(:ie, options: options)
 
 begin
-  # Navigate to URL
+  # Navegar para URL
   driver.get 'https://google.com'
   puts(driver.capabilities.to_json)
 ensure
@@ -491,6 +384,7 @@ driver = await env.builder()
           .build();
   {{< /tab >}}
   {{< tab header="Kotlin" >}}
+
 import org.openqa.selenium.Capabilities
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.ie.InternetExplorerOptions
@@ -511,13 +405,13 @@ fun main() {
   {{< /tab >}}
 {{< /tabpane >}}
 
-### forceCreateProcessApi
+## forceCreateProcessApi
 
-Forciert beim Starten des Internet Explorers die Verwendung der 
-CreateProcess API. Standardwert ist false (=deaktiviert).
+Força a inicialização do Internet Explorer
+usando a API CreateProcess. O valor padrão é falso.
 
-Ab IE Version 8 ist für diese Einstellung es notwendig den 
-"TabProcGrowth" Wert auf 0 zu setzen. 
+Para IE 8 e superior, esta opção requer que
+o valor de registro "TabProcGrowth" seja definido como 0.
 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -547,7 +441,7 @@ options = webdriver.IeOptions()
 options.force_create_process_api = True
 driver = webdriver.Ie(options=options)
 
-# Navigate to url
+# Navegar para Url
 driver.get("http://www.google.com")
 
 driver.quit()
@@ -575,7 +469,7 @@ options.force_create_process_api = true
 driver = Selenium::WebDriver.for(:ie, options: options)
 
 begin
-  # Navigate to URL
+  # Navegar para Url
   driver.get 'https://google.com'
   puts(driver.capabilities.to_json)
 ensure

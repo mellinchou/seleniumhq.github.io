@@ -1,116 +1,23 @@
 ---
-title: "Capacidades específicas de los Drivers"
-linkTitle: "Capacidades específicas de los Drivers"
-weight: 2
-aliases: ["/documentation/es/driver_idiosyncrasies/driver_specific_capabilities/"]
+title: "IE Specific Capabilities"
+linkTitle: "IE Specific"
+weight: 4
 ---
 
-## Firefox
+{{% pageinfo color="warning" %}}
+<p class="lead">
+   <i class="fas fa-language display-4"></i> 
+   Page being translated from 
+   English to Dutch. Do you speak Dutch? Help us to translate
+   it by sending us pull requests!
+</p>
+{{% /pageinfo %}}
 
-### Define las capacidades usando `FirefoxOptions`
+## fileUploadDialogTimeout
 
-`FirefoxOptions` es la nueva forma de definir capacidades para el navegador 
-Firefox y debe de ser usado de manera general antes que DesriredCapabilities.
-
-{{< tabpane langEqualsHeader=true >}}
-  {{< tab header="Java" >}}
-FirefoxOptions options = new FirefoxOptions();
-options.addPreference("network.proxy.type", 0);
-driver = new RemoteWebDriver(options);
-  {{< /tab >}}
-  {{< tab header="Python" >}}
-from selenium.webdriver.firefox.options import Options
-options = Options()
-options.headless = True
-driver = webdriver.Firefox(options=options)
-  {{< /tab >}}
-  {{< tab header="CSharp" >}}
-var options = new FirefoxOptions();
-options.Proxy.Kind = ProxyKind.Direct;
-var driver = new FirefoxDriver(options);
-  {{< /tab >}}
-  {{< tab header="Ruby" >}}
-require 'selenium-webdriver'
-opts = Selenium::WebDriver::Firefox::Options.new(args: ['-headless'])
-driver = Selenium::WebDriver.for(:firefox, options: opts)
-  {{< /tab >}}
-  {{< tab header="JavaScript" >}}
-const { Builder } = require("selenium-webdriver");
-const firefox = require('selenium-webdriver/firefox');
-
-const options = new firefox.Options();
-options.headless();
-const driver = new Builder()
-    .forBrowser('firefox')
-    .setFirefoxOptions(options)
-    .build();
-  {{< /tab >}}
-  {{< tab header="Kotlin" >}}
-val options = new FirefoxOptions()
-options.addPreference("network.proxy.type", 0)
-driver = RemoteWebDriver(options)
-  {{< /tab >}}
-{{< /tabpane >}}
-
-
-### Fijando un perfil a medida
-
-Es posible crear perfiles a medida para Firefox, como se puede ver a continuación.
-
-{{< tabpane langEqualsHeader=true >}}
-  {{< tab header="Java" >}}
-FirefoxProfile profile = new FirefoxProfile();
-FirefoxOptions options = new FirefoxOptions();
-options.setProfile(profile);
-driver = new RemoteWebDriver(options);
-  {{< /tab >}}
-  {{< tab header="Python" >}}
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
-options=Options()
-firefox_profile = FirefoxProfile()
-firefox_profile.set_preference("javascript.enabled", False)
-options.profile = firefox_profile
-  {{< /tab >}}
-  {{< tab header="CSharp" >}}
-var options = new FirefoxOptions();
-var profile = new FirefoxProfile();
-options.Profile = profile;
-var driver = new RemoteWebDriver(options);
-  {{< /tab >}}
-  {{< tab header="Ruby" >}}
-profile = Selenium::WebDriver::Firefox::Profile.new
-profile['browser.download.dir'] = "/tmp/webdriver-downloads"
-options = Selenium::WebDriver::Firefox::Options.new(profile: profile)
-driver = Selenium::WebDriver.for :firefox, options: options
-  {{< /tab >}}
-  {{< tab header="JavaScript" >}}
-const { Builder } = require("selenium-webdriver");
-const firefox = require('selenium-webdriver/firefox');
-
-const options = new firefox.Options();
-let profile = '/path to custom profile';
-options.setProfile(profile);
-const driver = new Builder()
-    .forBrowser('firefox')
-    .setFirefoxOptions(options)
-    .build();
-  {{< /tab >}}
-  {{< tab header="Kotlin" >}}
-val options = FirefoxOptions()
-options.profile = FirefoxProfile()
-driver = RemoteWebDriver(options)
-  {{< /tab >}}
-{{< /tabpane >}}
-
-## Internet Explorer
-
-### Timeout ventana de selección de archivos (fileUploadDialogTimeout)
-
-En algunos entornos, Internet Explorer puede devolver un timeout cuando se abra
-una ventana de selección de archivos (_file upload dialog_). Por defecto el IEDriver
-tiene un timeout de 1000ms, pero puedes incrementarlo usando la capacidad
-_fileUploadDialogTimeout_.
+In some environments, Internet Explorer may timeout when opening the
+File Upload dialog. IEDriver has a default timeout of 1000ms, but you
+can increase the timeout using the fileUploadDialogTimeout capability.
 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -145,7 +52,7 @@ const ie = require('selenium-webdriver/ie');
 let options = new ie.Options().fileUploadDialogTimeout(2000);
 let driver = await Builder()
           .setIeOptions(options)
-          .build();
+          .build(); 
   {{< /tab >}}
   {{< tab header="Kotlin" >}}
 val options = InternetExplorerOptions()
@@ -154,7 +61,7 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### ensureCleanSession
+## ensureCleanSession
 
 When set to `true`, this capability clears the _Cache, 
 Browser History and Cookies_ for all running instances 
@@ -163,7 +70,7 @@ or by the driver. By default, it is set to `false`.
 
 Using this capability will cause performance drop while 
 launching the browser, as the driver will wait until the cache 
-gets cleared before launching the IE browser.  
+gets cleared before launching the IE browser.
 
 This capability accepts a Boolean value as parameter.
 
@@ -209,14 +116,14 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### ignoreZoomSetting
+## ignoreZoomSetting
 
 InternetExplorer driver expects the browser zoom level to be 100%, 
 else the driver will throw an exception. This default behaviour 
 can be disabled by setting the _ignoreZoomSetting_ to _true_.
- 
-This capability accepts a Boolean value as parameter.
 
+This capability accepts a Boolean value as parameter.
+ 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
 InternetExplorerOptions options = new InternetExplorerOptions();
@@ -259,7 +166,7 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### ignoreProtectedModeSettings
+## ignoreProtectedModeSettings
 
 Whether to skip the _Protected Mode_ check while launching 
 a new IE session.
@@ -319,7 +226,7 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### silent
+## silent
 
 When set to `true`, this capability suppresses the
 diagnostic output of the IEDriverServer.
@@ -390,7 +297,7 @@ fun main() {
   {{< /tab >}}
 {{< /tabpane >}}
 
-### IE Command-Line Options
+## IE Command-Line Options
 
 Internet Explorer includes several command-line options 
 that enable you to troubleshoot and configure the browser.
@@ -507,7 +414,7 @@ fun main() {
   {{< /tab >}}
 {{< /tabpane >}}
 
-### forceCreateProcessApi
+## forceCreateProcessApi
 
 Forces launching Internet Explorer 
 using the CreateProcess API. The default value is false.

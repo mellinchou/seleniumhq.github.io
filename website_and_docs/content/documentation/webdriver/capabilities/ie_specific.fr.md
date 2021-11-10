@@ -1,112 +1,18 @@
 ---
-title: "ドライバー固有の機能"
-linkTitle: "ドライバー固有の機能"
-weight: 2
-aliases: ["/documentation/ja/driver_idiosyncrasies/driver_specific_capabilities/"]
+title: "Capabilities Spécifiques du IE"
+linkTitle: "Spécifiques du IE"
+weight: 4
 ---
 
-## Firefox
+## fileUploadDialogTimeout
 
-### `FirefoxOptions` を使用してCapabilitiesを定義する
-
-`FirefoxOptions` は、Firefoxブラウザの機能を定義する新しい方法であり、通常はDesiredCapabilitiesよりも優先して使用する必要があります。
-
-{{< tabpane langEqualsHeader=true >}}
-  {{< tab header="Java" >}}
-FirefoxOptions options = new FirefoxOptions();
-options.addPreference("network.proxy.type", 0);
-driver = new RemoteWebDriver(options);
-  {{< /tab >}}
-  {{< tab header="Python" >}}
-from selenium.webdriver.firefox.options import Options
-options = Options()
-options.headless = True
-driver = webdriver.Firefox(options=options)
-  {{< /tab >}}
-  {{< tab header="CSharp" >}}
-var options = new FirefoxOptions();
-options.Proxy.Kind = ProxyKind.Direct;
-var driver = new FirefoxDriver(options);
-  {{< /tab >}}
-  {{< tab header="Ruby" >}}
-require 'selenium-webdriver'
-opts = Selenium::WebDriver::Firefox::Options.new(args: ['-headless'])
-driver = Selenium::WebDriver.for(:firefox, options: opts)
-  {{< /tab >}}
-  {{< tab header="JavaScript" >}}
-const { Builder } = require("selenium-webdriver");
-const firefox = require('selenium-webdriver/firefox');
-
-const options = new firefox.Options();
-options.headless();
-const driver = new Builder()
-    .forBrowser('firefox')
-    .setFirefoxOptions(options)
-    .build();
-  {{< /tab >}}
-  {{< tab header="Kotlin" >}}
-val options = new FirefoxOptions()
-options.addPreference("network.proxy.type", 0)
-driver = RemoteWebDriver(options)
-  {{< /tab >}}
-{{< /tabpane >}}
-
-
-### カスタムプロファイルを設定する
-
-以下に示すように、Firefoxのカスタムプロファイルを作成することができます。
-
-{{< tabpane langEqualsHeader=true >}}
-  {{< tab header="Java" >}}
-FirefoxProfile profile = new FirefoxProfile();
-FirefoxOptions options = new FirefoxOptions();
-options.setProfile(profile);
-driver = new RemoteWebDriver(options);
-  {{< /tab >}}
-  {{< tab header="Python" >}}
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
-options=Options()
-firefox_profile = FirefoxProfile()
-firefox_profile.set_preference("javascript.enabled", False)
-options.profile = firefox_profile
-  {{< /tab >}}
-  {{< tab header="CSharp" >}}
-var options = new FirefoxOptions();
-var profile = new FirefoxProfile();
-options.Profile = profile;
-var driver = new RemoteWebDriver(options);
-  {{< /tab >}}
-  {{< tab header="Ruby" >}}
-profile = Selenium::WebDriver::Firefox::Profile.new
-profile['browser.download.dir'] = "/tmp/webdriver-downloads"
-options = Selenium::WebDriver::Firefox::Options.new(profile: profile)
-driver = Selenium::WebDriver.for :firefox, options: options
-  {{< /tab >}}
-  {{< tab header="JavaScript" >}}
-const { Builder } = require("selenium-webdriver");
-const firefox = require('selenium-webdriver/firefox');
-
-const options = new firefox.Options();
-let profile = '/path to custom profile';
-options.setProfile(profile);
-const driver = new Builder()
-    .forBrowser('firefox')
-    .setFirefoxOptions(options)
-    .build();
-  {{< /tab >}}
-  {{< tab header="Kotlin" >}}
-val options = FirefoxOptions()
-options.profile = FirefoxProfile()
-driver = RemoteWebDriver(options)
-  {{< /tab >}}
-{{< /tabpane >}}
-
-## Internet Explorer
-
-### fileUploadDialogTimeout
-
-環境によっては、ファイルアップロードダイアログを開くときにInternet Explorerがタイムアウトする場合があります。 IEDriverのデフォルトのタイムアウトは1000ミリ秒ですが、fileUploadDialogTimeout capabilityを使用してタイムアウトを増やすことができます。
+Dans certains environnements, Internet Explorer 
+peut expirer lors de l'ouverture du
+Boîte de dialogue Téléchargement de fichier. 
+IEDriver a un délai d'expiration par 
+défaut de 1000 ms, mais vous
+peut augmenter le délai d'expiration 
+à l'aide de la fonction fileUploadDialogTimeout.
 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -150,16 +56,20 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### ensureCleanSession
+## ensureCleanSession
 
-この機能を `true` に設定すると、手動またはドライバーによって開始されたものを含め、
-InternetExplorerの実行中のすべてのインスタンスのキャッシュ、ブラウザー履歴、およびCookieがクリアされます。
-デフォルトでは、`false` に設定されています。
+Lorsqu'elle est définie sur `true`, cette fonctionnalité 
+efface le _Cache, Historique du navigateur et cookies_ 
+pour toutes les instances en cours d'exécution
+d'InternetExplorer, y compris ceux démarrés manuellement
+ou par le chauffeur. Par défaut, il est défini sur `false`.
 
-この機能を使用すると、ドライバーがIEブラウザーを起動する前にキャッシュがクリアされるまで待機するため、
-ブラウザーの起動中にパフォーマンスが低下します。
+L'utilisation de cette fonctionnalité 
+entraînera une baisse des performances
+lancement du navigateur, car le pilote 
+attendra que le cache est effacé avant de lancer le navigateur IE.
 
-このケイパビリティは、ブール値をパラメーターとして受け入れます。
+Cette capacité accepte une valeur booléenne comme paramètre.
 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -203,13 +113,14 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### ignoreZoomSetting
+## ignoreZoomSetting
 
-InternetExplorerドライバーは、ブラウザーのズームレベルが100％であることを想定しています。
-それ以外の場合、ドライバーは例外をスローします。
-このデフォルトの動作は、 _ignoreZoomSetting_ を _true_ に設定することで無効にできます。
-
-このケイパビリティは、ブール値をパラメーターとして受け入れます。
+Le pilote InternetExplorer s'attend à ce que le 
+niveau de zoom du navigateur soit de 100%,
+sinon le pilote lèvera une exception. Ce comportement par défaut
+peut être désactivé en définissant _ignoreZoomSetting_ sur _true_.
+ 
+Cette capacité accepte une valeur booléenne comme paramètre.
 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -253,21 +164,27 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### ignoreProtectedModeSettings
+## ignoreProtectedModeSettings
 
-新しいIEセッションの起動中に _保護モード_ チェックをスキップするかどうか。
+Ignorer la vérification du _Protected Mode_ lors du lancement
+une nouvelle session IE.
 
-設定されておらず、 _保護モード_ 設定がすべてのゾーンで同じでない場合、
-ドライバーによって例外がスローされます。
+S'il n'est pas défini et que les paramètres du 
+mode protégé ne sont pas les mêmes pour
+toutes les zones, une exception sera levée par le pilote.
 
-ケイパビリティを `true` に設定すると、テストが不安定になったり、応答しなくなったり、
-ブラウザがハングしたりする場合があります。
-ただし、これはまだ2番目に良い選択であり、最初の選択は *常に* 
-各ゾーンの保護モード設定を手動で実際に設定することです。
-ユーザーがこのプロパティを使用している場合、「ベストエフォート」のみがサポートされます。
+Si la capabilité est définie sur `true`, 
+les tests peuvent deviennent irréguliers, 
+ne répondent pas ou les navigateurs peuvent se bloquer.
+Cependant, c'est toujours de loin un deuxième meilleur choix,
+et le premier choix devrait *toujours* être de réellement
+définissez manuellement les paramètres 
+du mode protégé de chaque zone. 
+Si un utilisateur utilise cette propriété,
+seul un "meilleur effort" de soutien sera donné.
 
-このケイパビリティは、ブール値をパラメーターとして受け入れます。
-
+Cette capacité accepte une valeur booléenne comme paramètre.
+ 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
 InternetExplorerOptions options = new InternetExplorerOptions();
@@ -310,11 +227,12 @@ val driver = RemoteWebDriver(options)
   {{< /tab >}}
 {{< /tabpane >}}
 
-### silent
+## silent
 
-`true` に設定すると、このケイパビリティはIEDriverServerの診断出力を抑制します。
+When set to `true`, this capability suppresses the
+diagnostic output of the IEDriverServer.
 
-このケイパビリティは、ブール値をパラメーターとして受け入れます。
+This capability accepts a Boolean value as parameter.
  
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -380,23 +298,22 @@ fun main() {
   {{< /tab >}}
 {{< /tabpane >}}
 
-### IE Command-Line Options
+## IE Command-Line Options
 
-Internet Explorerには、ブラウザーのトラブルシューティングと構成を可能にするいくつかのコマンドラインオプションが含まれています。
+Internet Explorer includes several command-line options 
+that enable you to troubleshoot and configure the browser.
 
-次に、サポートされているいくつかのコマンドラインオプションについて説明します。
+The following describes few supported command-line options 
 
-* _-private_ : IEをプライベートブラウジングモードで起動するために使用されます。
-これはIE 8以降のバージョンで機能します。
+* _-private_ : Used to start IE in private browsing mode. This works for IE 8 and later versions.
 
-* _-k_ : Internet Explorerをキオスクモードで起動します。
-ブラウザは、アドレスバー、ナビゲーションボタン、またはステータスバーを表示しない最大化されたウィンドウで開きます。
+* _-k_ : Starts Internet Explorer in kiosk mode. 
+The browser opens in a maximized window that does not display the address bar, the navigation buttons, or the status bar.
 
-* _-extoff_ : アドオンなしモードでIEを起動します。
-このオプションは、ブラウザーのアドオンに関する問題のトラブルシューティングに特に使用されます。
-IE 7以降のバージョンで動作します。
+* _-extoff_ : Starts IE in no add-on mode. 
+This option specifically used to troubleshoot problems with browser add-ons. Works in IE 7 and later versions.
 
-注：コマンドライン引数が機能するためには、 __forceCreateProcessApi__ を順番に有効にする必要があります。
+Note: __forceCreateProcessApi__ should to enabled in-order for command line arguments to work.
 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}
@@ -490,7 +407,7 @@ fun main() {
     try {
         driver.get("https://google.com/ncr")
         val caps = driver.getCapabilities()
-        println(caps);
+        println(caps)
     } finally {
         driver.quit()
     }
@@ -498,12 +415,13 @@ fun main() {
   {{< /tab >}}
 {{< /tabpane >}}
 
-### forceCreateProcessApi
+## forceCreateProcessApi
 
-CreateProcess APIを使用してInternet Explorerを強制的に起動します。
-デフォルト値はfalseです。
+Forces launching Internet Explorer 
+using the CreateProcess API. The default value is false.
 
-IE 8以降の場合、このオプションでは "TabProcGrowth" レジストリの値を0に設定する必要があります。
+For IE 8 and above, this option requires the 
+"TabProcGrowth" registry value to be set to 0.
 
 {{< tabpane langEqualsHeader=true >}}
   {{< tab header="Java" >}}

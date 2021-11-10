@@ -2,7 +2,12 @@
 title: "Capabilities"
 linkTitle: "Capabilities"
 weight: 14
-aliases: ["/documentation/ko/driver_idiosyncrasies/"]
+aliases:
+        [
+            "/documentation/ko/driver_idiosyncrasies/",
+            "/documentation/ko/driver_idiosyncrasies/driver_specific_capabilities/",
+            "/ko/documentation/webdriver/capabilities/driver_specific_capabilities/"
+        ]
 ---
 
 {{% pageinfo color="warning" %}}
