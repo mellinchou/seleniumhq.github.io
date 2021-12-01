@@ -100,8 +100,7 @@ detect-drivers = false
 max-sessions = 2
 
 [docker]
-configs = 
-    [
+configs = [
         "selenium/standalone-chrome:93.0", "{\"browserName\": \"chrome\", \"browserVersion\": \"91\"}", 
         "selenium/standalone-firefox:92.0", "{\"browserName\": \"firefox\", \"browserVersion\": \"92\"}"
     ]
